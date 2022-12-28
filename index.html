@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Custom ZOO App Builder</title>
+
+		<!-- UIkit CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.15.19/dist/css/uikit.min.css" />
+
+		<!-- UIkit JS -->
+		<script src="https://cdn.jsdelivr.net/npm/uikit@3.15.19/dist/js/uikit.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/uikit@3.15.19/dist/js/uikit-icons.min.js"></script>
+
+		<script
+		  src="https://code.jquery.com/jquery-3.6.3.min.js"
+		  integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+		  crossorigin="anonymous"></script>
+
+	</head>
+	<body>
+
+		<div class="uk-light uk-section uk-section-secondary uk-flex uk-flex-middle uk-flex-center" uk-height-viewport>
+			<div class="uk-container uk-container-large uk-container-center">
+
+				<div class="uk-width-large">
+		
+					<div class="uk-width-1-1">
+
+						<div class="uk-width-1-1 uk-text-center">
+							<h2>YOOtheme ZOO App Creator</h2>
+						</div>
+						
+						<form id="ajax-submission-form" class="uk-form uk-form-stacked uk-form-blank" action="createapp.php">
+		
+							<div>
+								<label for="app-name" class="uk-form-label">
+									<div class="uk-text-meta">Set the App name readeable for humans, eg: My App</div>
+								</label>
+								<div class="uk-form-controls">
+									<input type="text" required="required" name="app-name" id="app-name" placeholder="Your App Name" class="uk-input uk-form-large">
+								</div>
+							</div>
+		
+							<div class="uk-width-auto@s uk-margin">
+
+								<button type="submit" class="form_trigger uk-width-1-1 uk-button uk-button-default">
+									<span uk-spinner="ratio: 0.5" class="uk-hidden"></span>
+									Cretae App
+								</button>
+
+								<a id="download-button" class="uk-width-1-1 uk-hidden uk-button uk-button-danger uk-margin" href="">
+									<span uk-icon="cloud-download"></span>
+									Download
+								</a>
+
+							</div>
+
+							<div class="uk-margin uk-text-small">
+								After doawnloading the app, install it from within your ZOO backend<br>
+								<ol class="">
+									<li>
+										<span class="uk-text-muted">https://yourdomain.com</span>/administrator/index.php?option=com_zoo&controller=manager<br>
+									</li>
+
+									<li>
+										Install a new App<br>
+									</li>
+
+								</ol>
+							</div>
+							
+						</form>
+		
+					</div>
+					
+				</div>
+				
+			</div>
+		</div>
+
+		<div class="uk-position-bottom">
+
+			<div class="uk-padding-small">
+
+				<div class="uk-float-right uk-margin">
+
+					<div class="uk-width-small">
+						<a href="https://joomladesigner.com/" target="_blank">
+							<img src="assets/jds-logo.webp">
+						</a>
+					</div>
+					
+				</div>
+				
+			</div>
+			
+		</div>
+		
+	</body>
+
+	<script type="text/javascript">
+
+		jQuery(document).ready(function($) {
+			
+			$("#ajax-submission-form").on('submit', function(e)
+			{
+
+				$('#download-button').addClass('uk-hidden');
+
+				e.preventDefault();
+				var form = $(this);
+				
+				$('.form_trigger', form).addClass('uk-disabled');
+				$('.form_trigger [uk-spinner]', form).removeClass('uk-hidden');
+
+
+				var actionUrl = form.attr('action')
+					formData = form.serializeArray();
+				
+				$.ajax({
+					type: "POST",
+					url: actionUrl,
+					data: formData, // serializes the form's elements.
+					success: async function(data)
+					{
+						// console.log(data);
+
+						$('.form_trigger', form).removeClass('uk-disabled');
+						$('.form_trigger [uk-spinner]', form).addClass('uk-hidden');
+
+						$('#download-button').attr('href', 'dist/' + data).removeClass('uk-hidden');
+					}
+				});
+			});
+
+		});
+
+	</script>
+
+</html>
