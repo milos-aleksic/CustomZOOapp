@@ -46,12 +46,14 @@
 
 								<button type="submit" class="form_trigger uk-width-1-1 uk-button uk-button-default">
 									<span uk-spinner="ratio: 0.5" class="uk-hidden"></span>
-									Cretae App
+									<span class="uk-text-capitalize">
+										Create New App
+									</span>
 								</button>
 
 								<a id="download-button" class="uk-width-1-1 uk-hidden uk-button uk-button-danger uk-margin" href="">
-									<span uk-icon="cloud-download"></span>
-									Download
+									<span class="uk-margin-small-right" uk-icon="cloud-download"></span>
+									Download <span class="new_app_name uk-text-capitalize"></span>
 								</a>
 
 							</div>
@@ -97,45 +99,49 @@
 			
 		</div>
 		
-	</body>
+		<script type="text/javascript">
 
-	<script type="text/javascript">
-
-		jQuery(document).ready(function($) {
-			
-			$("#ajax-submission-form").on('submit', function(e)
-			{
-
-				$('#download-button').addClass('uk-hidden');
-
-				e.preventDefault();
-				var form = $(this);
+			jQuery(document).ready(function($) {
 				
-				$('.form_trigger', form).addClass('uk-disabled');
-				$('.form_trigger [uk-spinner]', form).removeClass('uk-hidden');
+				$("#ajax-submission-form").on('submit', function(e)
+				{
+
+					$('#download-button').addClass('uk-hidden');
+					$('.new_app_name').text('');
+
+					e.preventDefault();
+					var form = $(this);
+					
+					$('.form_trigger', form).addClass('uk-disabled');
+					$('.form_trigger [uk-spinner]', form).removeClass('uk-hidden');
 
 
-				var actionUrl = form.attr('action')
-					formData = form.serializeArray();
-				
-				$.ajax({
-					type: "POST",
-					url: actionUrl,
-					data: formData, // serializes the form's elements.
-					success: async function(data)
-					{
-						// console.log(data);
+					var actionUrl = form.attr('action')
+						formData = form.serializeArray();
+					
+					$.ajax({
+						type: "POST",
+						url: actionUrl,
+						data: formData, // serializes the form's elements.
+						success: async function(data)
+						{
+							// console.log(data);
 
-						$('.form_trigger', form).removeClass('uk-disabled');
-						$('.form_trigger [uk-spinner]', form).addClass('uk-hidden');
+							$('#app-name', form).val('');
+							$('.new_app_name', form).text('"' + data.replace(/\-/g, ' ').replace('.zip', '') + '"');
+							
+							$('.form_trigger', form).removeClass('uk-disabled');
+							$('.form_trigger [uk-spinner]', form).addClass('uk-hidden');
 
-						$('#download-button').attr('href', 'dist/' + data).removeClass('uk-hidden');
-					}
+							$('#download-button').attr('href', 'dist/' + data).removeClass('uk-hidden');
+						}
+					});
 				});
+
 			});
 
-		});
+		</script>
 
-	</script>
+	</body>
 
 </html>
